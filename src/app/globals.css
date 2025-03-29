@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import "tailwindcss";
+
+*{
+  box-sizing: border-box;
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background-color: #5c288d; /* Tailwind's purple-600 */
+  color: white; /* Text color when selected */
+}
+
+/* Hide scrollbar for Firefox */
+html {
+  scrollbar-width: none;
+}
+
+body{
+  -ms-overflow-style: none;
+}
