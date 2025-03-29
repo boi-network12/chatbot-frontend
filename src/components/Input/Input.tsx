@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactElement } from "react";
+import { useState, ReactElement, KeyboardEvent, FormEvent } from "react";
 import { BiArrowToTop, BiPlus } from "react-icons/bi";
 import { MdOutlineSearch, MdOutlineTextFields } from "react-icons/md";
 import { FaBrain } from "react-icons/fa";
