@@ -19,6 +19,7 @@ interface ChatContextType {
   clearChat: () => Promise<void>;
   fetchChatHistory: () => Promise<void>;
   createNewChat: () => Promise<void>;
+  editMessage: (chatId: string, messageIndex: number, newContent: string) => Promise<void>;
   isHistoryLoading: boolean;
   currentChatId: string | null;
 }
@@ -187,6 +188,52 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const editMessage = async (chatId: string, messageIndex: number, newContent: string) => {
+    if (!token || !chatId || !newContent.trim()) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Optimistic update
+      setMessages(prev => {
+        const newMessages = [...prev];
+        if (newMessages[messageIndex]?.role === "user") {
+          newMessages[messageIndex] = {
+            ...newMessages[messageIndex],
+            content: newContent,
+            timestamp: new Date()
+          };
+        }
+        return newMessages;
+      });
+
+      const res = await fetch(`${config.API_URL}/chat/${chatId}/message/${messageIndex}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: newContent }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to edit message");
+      }
+
+      await res.json();
+      toast.success("Message edited successfully");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to edit message");
+      console.error("Error editing message:", err);
+      toast.error("Failed to edit message");
+      // Revert on failure
+      await fetchChatHistory();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -197,6 +244,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         clearChat,
         fetchChatHistory,
         createNewChat,
+        editMessage,
         isHistoryLoading,
         currentChatId,
       }}

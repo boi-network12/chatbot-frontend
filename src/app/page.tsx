@@ -11,13 +11,13 @@ export default function Home() {
   
 
   return (
-    <div className="flex flex-row bg-gray-900 h-[100vh]">
+    <div className="bg-gray-900 h-[100vh] w-full">
       <History isOpen={isOpen}/>
       <main>
         <section>
           <Header toggleDrawer={() => setIsOpen(!isOpen)}/>
         </section>
-        <section>
+        <section className="w-full">
           <ChatDisplay />
         </section>
         <section>

@@ -2,7 +2,7 @@
 "use client"
 import useAuth from "@/hooks/useAuth";
 import { BiChevronDown, BiEdit, BiMenuAltLeft } from "react-icons/bi"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthModal from "../AuthModal/AuthModal";
 import { useChat } from "@/context/chatContext";
 
@@ -14,6 +14,14 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer }) => {
     const { user } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const { clearChat  } = useChat();
+
+    useEffect(() => {
+        if (!user) {
+            setShowAuthModal(true);
+        } else {
+            setShowAuthModal(false)
+        }
+    },[user])
 
     const handleNewChat = async () => {
         try {
